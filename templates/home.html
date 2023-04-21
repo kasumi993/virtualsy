@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block head %}
+	<title>Connexion: Virtualsy</title>
+{% endblock %}
+
+{% block body %}
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100 large">
+				<form class="login100-form validate-form">
+                    <div class="header">
+                        <span class="welcome" id="title">
+                            Welcome 
+                        </span>
+                        <div class="account">
+                            <span class="avatar">
+                                <i class="zmdi zmdi-account-circle"></i>
+                            </span>
+                            <span class="small-text" id="credit">
+                                Remaining Credits: 0 
+                            </span>
+							<span class="small-grey-text">
+								<a href="{{ url_for('index') }}">Disconnect</a>
+							</span>
+                        </div>
+                    </div>
+					
+                    <div class="cards-container">
+                        <div class="card machine" id="linux">
+                            <span class="radio"></span>
+							<div class="content">
+								<img src="{{ url_for('static', filename='images/ubuntu-logo.png') }}" width="80"/>
+								<span class="card-title">Linux : Ubuntu Server 20.04 LTS</span>
+							</div>
+                            
+                        </div>
+                        <div class="card machine" id="windows">
+                            <span class="radio"></span>
+							<div class="content">
+								<img src="{{ url_for('static', filename='images/windows-logo.png') }}" width="80"/>
+								<span class="card-title">Windows : Windows Server 2019 Datacenter - x64 Gen2</span>
+							</div>
+                        </div>
+                        <div class="card machine" id="other">
+                            <span class="radio"></span>
+							<div class="content">
+								<img src="{{ url_for('static', filename='images/os_logo.png') }}" width="80"/>
+								<span class="card-title">Other Virtual Machines</span>
+							</div>
+                        </div>
+                    </div>
+
+					<div class="container-gradiant-form-btn container-connect-form-btn">
+						<div class="wrap-gradiant-form-btn wrap-connect-form-btn">
+							<div class="gradiant-form-bgbtn connect-form-bgbtn"></div>
+							<button class="gradiant-form-btn connect-form-btn">
+								Connect to machine
+							</button>
+						</div>
+					</div>
+
+					<div class="text-center p-t-115">
+						<span class="txt1">
+							Set up your virtual machines
+						</span>
+
+						<a class="txt2" href="#">
+							easily and effortlesly
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+{% endblock %}
+	

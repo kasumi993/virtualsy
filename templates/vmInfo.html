@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block head %}
+	<title>vm informations: Virtualsy</title>
+{% endblock %}
+
+{% block body %}
+
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100 large">
+				<form class="login100-form validate-form">
+                    <div class="header">
+                        <span class="welcome" id="title">
+                            Welcome 
+                        </span>
+                        <div class="account">
+                            <span class="avatar">
+                                <i class="zmdi zmdi-account-circle"></i>
+                            </span>
+                            <span class="small-text" id="credit">
+                                Remaining Credits: 0 
+                            </span>
+							<span class="small-grey-text">
+								<a href="{{ url_for('index') }}">Disconnect</a>
+							</span>
+                        </div>
+                    </div>
+					
+					<div class="main">
+						<span class="loader hidden">
+							<i class="zmdi zmdi-spinner zmdi-hc-spin"></i>
+							<span class="small-grey-text loading-text" style="margin-top: 10px;">
+								Looking for a {{ vm }} machine...(This might take 1 or 2 minutes...)
+							</span>
+						</span>
+
+						<div class="vm-info row hidden">
+							<div class="column main-left">
+								<span class="small-text" id="name">Machine name : 
+									<span class="value"></span>
+								</span>
+								<span class="small-text" id="location">Machine location : 
+									<span class="value"></span>
+								</span>
+								<span class="small-text" id="type">Machine type : 
+									<span class="value"></span>
+								</span>
+								<span class="small-text" id="vm_id">Machine id : 
+									<span class="value"></span>
+								</span>
+							</div>
+							<div class="column main-right">
+								<span class="small-text" id="admin_username">Admin Username : 
+									<span class="value"></span>
+								</span>
+								<span class="small-text" id="admin_password">Admin Password : 
+									<span class="value"></span>
+								</span>
+								<span class="small-text" id="public_ip">Public Ip : 
+									<span class="value"></span>
+								</span>
+								<span class="small-text" id="os_type">Os type : 
+									<span class="value"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+            
+
+					<div class="container-gradiant-form-btn">
+						<div class="wrap-gradiant-form-btn">
+							<div class="gradiant-form-bgbtn destroy-machine-bgbtn"></div>
+							<button class="gradiant-form-btn destroy-machine">
+								Destroy machine (it will be automatically destroyed in...)
+							</button>
+						</div>
+					</div>
+
+					<div class="text-center p-t-55">
+						<span class="txt1">
+							Set up your virtual machines
+						</span>
+
+						<a class="txt2" href="#">
+							easily and effortlesly
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+	{% endblock %}

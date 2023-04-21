@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block head %}
+	<title>Connexion: Virtualsy</title>
+{% endblock %}
+
+{% block body %}
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<form class="login100-form validate-form">
+                    <div class="header">
+                        <span class="login100-form-title" id="title">
+                            Welcome 
+                        </span>
+                        <div class="account">
+                            <span class="login100-form-icon">
+                                <i class="zmdi zmdi-account-circle"></i>
+                            </span>
+                            <span class="small-text" id="credit">
+                                Remaining Credits: 0 
+                            </span>
+							<span class="small-grey-text">
+								<a href="index.html">Disconnect</a>
+							</span>
+                        </div>
+                    </div>
+					
+                    
+
+					<div class="container-login100-form-btn">
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							<button class="login100-form-btn">
+								Connect to machine
+							</button>
+						</div>
+					</div>
+
+					<div class="text-center p-t-115">
+						<span class="txt1">
+							Set up your virtual machines
+						</span>
+
+						<a class="txt2" href="#">
+							easily and effortlesly
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+{% endblock %}

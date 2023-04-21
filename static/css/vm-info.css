@@ -1,0 +1,43 @@
+.main {
+    height: 230px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.loader {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    left: 1%;
+    font-size: 80px;
+    width: 100%;
+    text-align: center;
+    line-height: 1.2;
+    margin: 50px 0 100px 0;
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+}
+
+.loader.hidden {
+    opacity: 0;
+}
+
+.vm-info.hidden {
+    display: none;
+}
+
+.vm-info {
+    justify-content: space-around;
+    width: 100%;
+}
+
+.main-left, .main-right {
+    gap: 20px;
+}
+
+.small-text .value {
+    color: #6a7dfe;
+}
+
