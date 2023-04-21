@@ -14,8 +14,7 @@ Pour installer ce projet en local sans docker, vous devez avoir python installé
  - Creez un environnement virtuel de test python :   
   
     - `python -m venv env` ( ou "python3" en fonction de votre installation )
-    - `cd env` 
-    - `source bin/activate ` (Linux shells (Bash, ZSH, etc.) or  `.\env\Scripts\activate.bat` (pour  Windows).  
+    - `source env/bin/activate ` (Linux shells (Bash, ZSH, etc.) or  `.\env\Scripts\activate.bat` (pour  Windows).  
     Cette commande permettra de n'installer les dépendance que dans l'environnement de ce projet.
 ---           
         
@@ -37,6 +36,10 @@ Et voila !! vous avez réussi à installer le projet.
 <br/>
 
 Il y'a trois utilisateurs principaux dont les identifiants sont donnés ci dessous:
+
+> vous pouvez vous déconnecter en appuyant sur le boutton `Disconnect` à droite, en dessous le l'avatar
+
+<br/>
 
     1 - nocredituser {                          
         // qui a 0 crédit et ne peut donc utiliser aucune des machines
@@ -69,7 +72,7 @@ Vous serez redirigé vers une page vous indiquant l'etat de chargement de votre 
 <br/>
 Une fois votre machine créée et les informations affichées, vous pourrez vous connecter avec les identifiants fournis via ssh ou rdp en fonction de l'os indiqué sur l'interface.
 
-La machine ainsi créée s'autodétruira 10 minutes plus tard, mais vous pouvez la détruire vous même en appuyant sur le bouton 'détruire'.
+La machine ainsi créée s'autodétruira `10 minutes` plus tard, mais vous pouvez la détruire vous même en appuyant sur le bouton 'détruire'.
 
 <br/>
 
@@ -108,3 +111,7 @@ La suppression automatique a été gérée à l'aide des Threads python afin que
 
 Le Thread est lancé à la création de la VM.  
 (Pour tester, Il faudra prendre en compte le temps de supression des ressources qui peut prendre jusqu'à 5 minutes en fonction du temps de réponse azure)
+
+<br>
+
+> NB : Ce code est un prototype à améliorer (validation des actions, attribution de VM en fonction des comptes, navigation, etc...)

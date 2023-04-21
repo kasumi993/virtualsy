@@ -1,5 +1,5 @@
 .main {
-    height: 230px;
+    height: 250px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -29,6 +29,10 @@
 }
 
 .vm-info {
+    width: 100%;
+}
+
+.info-container .row {
     justify-content: space-around;
     width: 100%;
 }

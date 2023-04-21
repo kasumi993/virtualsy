@@ -150,11 +150,106 @@ def send_vm_info(network_client, compute_client):
 
     json_vm = json.dumps(vm, indent=4)
     return json_vm
+
+def set_vm_disk(compute_client):
+    # Tag the VM
+    print('\nTag Virtual Machine')
+    async_vm_update = compute_client.virtual_machines.begin_create_or_update(
+        GROUP_NAME,
+        VM_NAME,
+        {
+            'location': LOCATION,
+            'tags': {
+                'who-rocks': 'python',
+                'where': 'on azure',
+            }
+        }
+    )
+    async_vm_update.wait()
+
+    # Create managed data disk
+    print('\nCreate (empty) managed Data Disk')
+    async_disk_creation = compute_client.disks.begin_create_or_update(
+        GROUP_NAME,
+        'mydatadisk1',
+        {
+            'location': LOCATION,
+            'disk_size_gb': 10,
+            'creation_data': {
+                'create_option': DiskCreateOption.empty
+            }
+        }
+    )
+    data_disk = async_disk_creation.result()
+
+    # Get the virtual machine by name
+    print('\nGet Virtual Machine by Name')
+    virtual_machine = compute_client.virtual_machines.get(
+        GROUP_NAME,
+        VM_NAME
+    )
+
+    # Attach data disk
+    print('\nAttach Data Disk')
+    virtual_machine.storage_profile.data_disks.append({
+        'lun': 12,
+        'name': 'mydatadisk1',
+        'delete_option': 'Delete',
+        'create_option': DiskCreateOption.attach,
+        'managed_disk': {
+            'id': data_disk.id
+        }
+    })
+    async_disk_attach = compute_client.virtual_machines.begin_create_or_update(
+        GROUP_NAME,
+        virtual_machine.name,
+        virtual_machine
+    )
+    async_disk_attach.wait()
+
  
 def create_windows(compute_client, network_client):
     try:
+        security_rules = [
+            {
+                "name": "RDP",
+                "description": "Allow RDP",
+                "protocol": "Tcp",
+                "source_port_range": "*",
+                "destination_port_range": "3389",
+                "source_address_prefix": "*",
+                "destination_address_prefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+            },
+            {
+                "name": "DenyAllInBound",
+                "description": "Deny all inbound traffic",
+                "protocol": "*",
+                "source_port_range": "*",
+                "destination_port_range": "*",
+                "source_address_prefix": "*",
+                "destination_address_prefix": "*",
+                "access": "Deny",
+                "priority": 200,
+                "direction": "Inbound"
+            },
+            {
+                "name": "AllowAllOutBound",
+                "description": "Allow all outbound traffic",
+                "protocol": "*",
+                "source_port_range": "*",
+                "destination_port_range": "*",
+                "source_address_prefix": "*",
+                "destination_address_prefix": "*",
+                "access": "Allow",
+                "priority": 300,
+                "direction": "Outbound"
+            }
+        ]
         # Create a NIC
-        nic = create_nic(network_client)
+        nic = create_nic(network_client, security_rules)
         # Create Windows VM
         print('\nCreating Windows Virtual Machine')
         # Recycling NIC of previous VM
@@ -163,21 +258,7 @@ def create_windows(compute_client, network_client):
             GROUP_NAME, VM_NAME, vm_parameters)
         async_vm_creation.wait()
 
-         # Tag the VM
-        print('\nTag Virtual Machine')
-        async_vm_update = compute_client.virtual_machines.begin_create_or_update(
-            GROUP_NAME,
-            VM_NAME,
-            {
-                'location': LOCATION,
-                'tags': {
-                    'who-rocks': 'python',
-                    'where': 'on azure',
-                }
-            }
-        )
-
-        async_vm_update.wait()
+        set_vm_disk(compute_client)
         
         # Create a new thread to handle the VM deletion
         vm_deletion_thread = threading.Thread(target=delete_ressources_after_delay)
@@ -191,8 +272,19 @@ def create_windows(compute_client, network_client):
  
 def create_linux(compute_client, network_client):
     try:
+        security_rules = [{
+                'name': 'allow-ssh',
+                'protocol': 'Tcp',
+                'source_port_range': '*',
+                'destination_port_range': '22',
+                'source_address_prefix': '*',
+                'destination_address_prefix': '*',
+                'access': 'Allow',
+                'priority': 100,
+                'direction': 'Inbound'
+        }]
         # Create a NIC
-        nic = create_nic(network_client)
+        nic = create_nic(network_client, security_rules)
 
         # Create Linux VM
         print('\nCreating Linux Virtual Machine')
@@ -202,61 +294,9 @@ def create_linux(compute_client, network_client):
             GROUP_NAME, VM_NAME, vm_parameters)
         async_vm_creation.wait()
         
-        # Tag the VM
-        print('\nTag Virtual Machine')
-        async_vm_update = compute_client.virtual_machines.begin_create_or_update(
-            GROUP_NAME,
-            VM_NAME,
-            {
-                'location': LOCATION,
-                'tags': {
-                    'who-rocks': 'python',
-                    'where': 'on azure',
-                }
-            }
-        )
-        async_vm_update.wait()
- 
-        # Create managed data disk
-        print('\nCreate (empty) managed Data Disk')
-        async_disk_creation = compute_client.disks.begin_create_or_update(
-            GROUP_NAME,
-            'mydatadisk1',
-            {
-                'location': LOCATION,
-                'disk_size_gb': 10,
-                'creation_data': {
-                    'create_option': DiskCreateOption.empty
-                }
-            }
-        )
-        data_disk = async_disk_creation.result()
- 
-        # Get the virtual machine by name
-        print('\nGet Virtual Machine by Name')
-        virtual_machine = compute_client.virtual_machines.get(
-            GROUP_NAME,
-            VM_NAME
-        )
- 
-        # Attach data disk
-        print('\nAttach Data Disk')
-        virtual_machine.storage_profile.data_disks.append({
-            'lun': 12,
-            'name': 'mydatadisk1',
-            'delete_option': 'Delete',
-            'create_option': DiskCreateOption.attach,
-            'managed_disk': {
-                'id': data_disk.id
-            }
-        })
-        async_disk_attach = compute_client.virtual_machines.begin_create_or_update(
-            GROUP_NAME,
-            virtual_machine.name,
-            virtual_machine
-        )
-        async_disk_attach.wait()
-         # Create a new thread to handle the VM deletion
+        set_vm_disk(compute_client)
+        
+        # Create a new thread to handle the VM deletion
         vm_deletion_thread = threading.Thread(target=delete_ressources_after_delay)
         vm_deletion_thread.start()
  
@@ -269,7 +309,7 @@ def create_linux(compute_client, network_client):
 
 
  
-def create_nic(network_client):
+def create_nic(network_client, security_rules):
     """Create a Network Interface for a VM.
     """
     # Create VNet
@@ -341,17 +381,7 @@ def create_nic(network_client):
         'azure-virtualsy-nsg',
         {
             'location': LOCATION,
-            'security_rules': [{
-                'name': 'allow-ssh',
-                'protocol': 'Tcp',
-                'source_port_range': '*',
-                'destination_port_range': '22',
-                'source_address_prefix': '*',
-                'destination_address_prefix': '*',
-                'access': 'Allow',
-                'priority': 100,
-                'direction': 'Inbound'
-            }]
+            'security_rules': security_rules
         }
     )
     nsg_info = async_nsg_creation.result()
